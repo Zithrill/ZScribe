@@ -12,15 +12,11 @@ from scribe.cli.hooks.update import update
 from scribe.cli.hooks.run import run
 
 
-@click.group()
-@click.option('--model', help='Specify the AI model to use')
-@click.pass_context
-def cli(ctx, model):
-    ctx.ensure_object(dict)
+def setup_model_config(ctx, model, hook_type=None):
     if model:
         os.environ['ZSCRIBE_MODEL'] = model
     else:
-        git_config_model = get_git_config_model()
+        git_config_model = get_git_config_model(hook_type)
         if git_config_model:
             os.environ['ZSCRIBE_MODEL'] = git_config_model
 
@@ -32,22 +28,39 @@ def cli(ctx, model):
         ctx.abort()
 
 
-@cli.command()
+@click.group()
+@click.option('--model', help='Specify the AI model to use')
 @click.pass_context
-def commit_command(ctx):
+def cli(ctx, model):
+    """ZScribe CLI for generating commit messages and PR descriptions."""
+    ctx.ensure_object(dict)
+    setup_model_config(ctx, model)
+
+
+@cli.command()
+@click.argument('commit1')
+@click.argument('commit2')
+@click.option('--refine', is_flag=True, help='Refine the generated commit message')
+@click.pass_context
+def commit_command(ctx, commit1, commit2, refine):
+    """Generate a commit message."""
     git_config_model = get_git_config_model('commit')
     if git_config_model:
         os.environ['ZSCRIBE_MODEL'] = git_config_model
-    ctx.invoke(commit)
+    setup_model_config(ctx, None, 'commit')
+    ctx.invoke(commit, commit1=commit1, commit2=commit2, refine=refine)
 
 
 @cli.command()
+@click.argument('pr_number')
 @click.pass_context
-def pr_command(ctx):
+def pr_command(ctx, pr_number):
+    """Generate a pull request description."""
     git_config_model = get_git_config_model('pr')
     if git_config_model:
         os.environ['ZSCRIBE_MODEL'] = git_config_model
-    ctx.invoke(pr)
+    setup_model_config(ctx, None, 'pr')
+    ctx.invoke(pr, pr_number=pr_number)
 
 
 cli.add_command(commit_command, name='commit')

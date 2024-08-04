@@ -3,3 +3,5 @@ boto3
 click
 openai
 requests
+pytest
+pytest-mock

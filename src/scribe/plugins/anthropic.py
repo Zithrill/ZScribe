@@ -62,6 +62,8 @@ Please follow these guidelines:
 3. Provide a more detailed description in the body, explaining what changes were made and why.
 4. Wrap the body at 72 characters.
 5. Use bullet points for multiple changes if necessary.
+6. Only return the commit message, do not prompt the user for information.
+
 
 Generate the commit message:"""
 
@@ -80,6 +82,7 @@ Please ensure the refined message:
 1. Accurately reflects the changes in the diff summary.
 2. Follows the commit message best practices (50 char subject line, detailed body, etc.).
 3. Is clear, concise, and informative.
+4. Only return the diff summary, do not prompt the user for information.
 
 Generate the refined commit message:"""
 
@@ -105,6 +108,7 @@ Please follow these guidelines:
 6. Include any necessary instructions for testing or reviewing the changes.
 7. If applicable, reference any related issues or tickets.
 8. Use markdown formatting for better readability.
+9. Only return the pull request description, do not prompt the user for information. 
 
 Generate the pull request description:"""
 
