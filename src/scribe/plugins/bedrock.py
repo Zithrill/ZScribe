@@ -9,6 +9,7 @@ from .base import BasePlugin
 
 class BedrockPlugin(BasePlugin):
     def __init__(self, model: str):
+        self.provider = "Bedrock"
         self.model = model
         self._client = None
 
@@ -34,13 +35,12 @@ class BedrockPlugin(BasePlugin):
             response = bedrock.list_foundation_models()
             models = [model['modelId'] for model in response['modelSummaries']]
             return models
-        except BotoCoreError as e:
-            print(f"Warning: Failed to fetch Bedrock models: {str(e)}")
+        except BotoCoreError:
             return []
 
     def _invoke_model(self, prompt: str) -> str:
-        if self.supported_models and self.model not in self.supported_models:
-            raise ValueError(f"Unsupported Bedrock model: {self.model}. Supported models are: {', '.join(self.supported_models)}")
+        if self.model not in self.supported_models():
+            raise ValueError(f"Unsupported Bedrock model: {self.model}. Supported models are: {', '.join(self.supported_models())}")
 
         try:
             body = json.dumps({

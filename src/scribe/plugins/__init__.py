@@ -2,7 +2,6 @@ from .openai import OpenAIPlugin
 from .anthropic import AnthropicPlugin
 from .bedrock import BedrockPlugin
 from .ollama import OllamaPlugin
-from scribe.config import MODEL_PROVIDER_MAP
 
 PROVIDER_PLUGIN_MAP = {
     "openai": OpenAIPlugin,

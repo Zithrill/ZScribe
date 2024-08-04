@@ -6,6 +6,7 @@ from .base import BasePlugin
 
 class OllamaPlugin(BasePlugin):
     def __init__(self, model: str):
+        self.provider = "Ollama"
         self.base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
         self.model = model
 
@@ -39,9 +40,9 @@ class OllamaPlugin(BasePlugin):
             raise RuntimeError(f"Ollama API error: {str(e)}")
 
     def generate_commit_message(self, diff_summary: str) -> str:
-        if self.supported_models and self.model not in self.supported_models:
+        if self.model not in self.supported_models():
             raise ValueError(
-                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models)}")
+                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models())}")
 
         prompt = f"""As an AI assistant specialized in generating git commit messages, create a concise and informative commit message based on the following git diff summary:
 
@@ -59,9 +60,9 @@ Generate the commit message:"""
         return self._generate_response(prompt)
 
     def refine_commit_message(self, message: str, diff_summary: str) -> str:
-        if self.supported_models and self.model not in self.supported_models:
+        if self.model not in self.supported_models():
             raise ValueError(
-                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models)}")
+                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models())}")
 
         prompt = f"""As an AI assistant specialized in refining git commit messages, refine the following commit message based on the git diff summary:
 
@@ -81,9 +82,9 @@ Generate the refined commit message:"""
         return self._generate_response(prompt)
 
     def generate_pull_request_message(self, diff_summary: str, commit_messages: List[str]) -> str:
-        if self.supported_models and self.model not in self.supported_models:
+        if self.model not in self.supported_models():
             raise ValueError(
-                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models)}")
+                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models())}")
 
         formatted_commit_messages = "\n".join(commit_messages)
 

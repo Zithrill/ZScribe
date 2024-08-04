@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# src/scribe/prepare_commit_msg.py
-
 import sys
 import os
 import subprocess
@@ -8,10 +5,13 @@ from scribe.git_utils import parse_git_diff
 from scribe.config import get_model_config
 from scribe.plugins import get_plugin
 
-def main():
-    # The commit message file is passed as the first argument
-    commit_msg_file = sys.argv[1]
+def get_git_config_model():
+    try:
+        return subprocess.check_output(['git', 'config', 'zscribe.model']).decode('utf-8').strip()
+    except subprocess.CalledProcessError:
+        return None
 
+def prepare_commit_msg(commit_msg_file):
     # Get the diff of staged changes
     diff = subprocess.check_output(['git', 'diff', '--cached']).decode('utf-8')
 
@@ -23,6 +23,11 @@ def main():
     diff_summary = parse_git_diff(diff)
 
     try:
+        # Get model from git config
+        git_config_model = get_git_config_model()
+        if git_config_model:
+            os.environ['ZSCRIBE_MODEL'] = git_config_model
+
         # Get the model configuration
         config = get_model_config()
         # Get the appropriate plugin
@@ -46,6 +51,5 @@ def main():
         # In case of error, we don't modify the commit message file
         return
 
-
 if __name__ == "__main__":
-    main()
+    prepare_commit_msg(sys.argv[1])

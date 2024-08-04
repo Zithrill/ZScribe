@@ -2,9 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class BasePlugin(ABC):
-    @abstractmethod
-    def list_models(self) -> list[str]:
-        pass
 
     @abstractmethod
     def generate_commit_message(self, diff_summary: str) -> str:

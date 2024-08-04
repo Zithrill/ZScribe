@@ -1,45 +1,50 @@
-# ZScribe
+# ZScribe 📝🤖
 
-ZScribe is a command-line tool that automatically generates meaningful commit messages and pull request descriptions using various AI models. By analyzing the differences between git commits, it provides concise and informative messages, saving developers time and improving the quality of version control documentation.
+ZScribe is an intelligent tool that leverages AI to automatically generate meaningful commit messages and pull request descriptions. By analyzing git diffs, ZScribe provides concise and informative messages, saving developers time and improving the quality of version control documentation.
+
+![ZScribe Logo](https://example.com/zscribe-logo.png)
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [Supported Models and Providers](#supported-models-and-providers)
+  - [API Keys and Configuration](#api-keys-and-configuration)
+- [Usage](#usage)
+  - [Automatic Usage with Git Hooks](#automatic-usage-with-git-hooks)
+  - [Manual Usage](#manual-usage)
+  - [Managing Models](#managing-models)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Installation
 
-To install ZScribe, you can use pip:
+To install ZScribe, use pip:
 
 ```bash
-pip install ZScribe
+pip install zscribe
 ```
 
 ## Configuration
 
-ZScribe supports multiple AI providers through a plugin system. You can configure your preferred model using the `ZSCRIBE_MODEL` environment variable or the `--model` command-line argument.
+ZScribe supports multiple AI providers through a plugin system. 
 
 ### Supported Models and Providers
 
-- OpenAI:
-  - `gpt-3.5-turbo`
-  - `gpt-4`
-- Anthropic:
-  - `claude-2`
-  - `claude-instant-1`
-- AWS Bedrock:
-  - `anthropic.claude-v2`
-  - `ai21.j2-ultra-v1`
-  - `amazon.titan-text-express-v1`
-  - (Note: Available models may vary based on your AWS Bedrock access)
-- Ollama:
-  - `llama2`
-  - `mistral-7b`
-  - (Note: Available models depend on your local Ollama installation)
+| Provider | Models |
+|----------|--------|
+| OpenAI | `gpt-3.5-turbo`, `gpt-4` |
+| Anthropic | `claude-3-5-sonnet-20240620`, `claude-3-haiku-20240307` |
+| AWS Bedrock | `anthropic.claude-v2`, `ai21.j2-ultra-v1`, `amazon.titan-text-express-v1` |
+| Ollama | `llama2`, `mistral-7b` |
 
-Example:
-```bash
-export ZSCRIBE_MODEL='gpt-4'
-```
+> **Note**: Available models for AWS Bedrock may vary based on your access. Ollama models depend on your local installation.
 
-## API Keys and Configuration
+### API Keys and Configuration
 
-### OpenAI
+<details>
+<summary>OpenAI</summary>
 
 1. Go to [OpenAI's website](https://openai.com/) and sign up or log in.
 2. Navigate to the API section and create a new API key.
@@ -47,8 +52,10 @@ export ZSCRIBE_MODEL='gpt-4'
    ```bash
    export OPENAI_API_KEY='your-api-key-here'
    ```
+</details>
 
-### Anthropic
+<details>
+<summary>Anthropic</summary>
 
 1. Go to [Anthropic's website](https://www.anthropic.com/) and sign up for API access.
 2. Once approved, generate an API key from your account dashboard.
@@ -56,8 +63,10 @@ export ZSCRIBE_MODEL='gpt-4'
    ```bash
    export ANTHROPIC_API_KEY='your-api-key-here'
    ```
+</details>
 
-### AWS Bedrock
+<details>
+<summary>AWS Bedrock</summary>
 
 1. Sign up for an [AWS account](https://aws.amazon.com/) if you don't have one.
 2. Request access to AWS Bedrock in your AWS console.
@@ -71,47 +80,117 @@ export ZSCRIBE_MODEL='gpt-4'
    export AWS_SECRET_ACCESS_KEY='your-secret-key'
    export AWS_DEFAULT_REGION='your-preferred-region'
    ```
+</details>
 
-### Ollama
+<details>
+<summary>Ollama</summary>
 
 1. Install Ollama on your local machine following instructions from the [Ollama website](https://ollama.ai/).
 2. No API key is required as Ollama runs locally.
+</details>
 
 ## Usage
 
-Generate a commit message:
+ZScribe is designed to work automatically through git hooks, but also provides options for manual usage via the command-line interface.
+
+### Automatic Usage with Git Hooks
+
+Once installed and configured, ZScribe can automatically generate commit messages and pull request descriptions using git hooks.
+
+To set up the git hooks:
+
 ```bash
-zscribe commit1 commit2 [--model MODEL_NAME]
+zscribe hooks install --type both --model <your-chosen-model>
 ```
 
-Generate a pull request description:
-```bash
-zscribe --pr PR_NUMBER [--model MODEL_NAME]
-```
+This will install both commit and pull request hooks, using the specified model for both.
 
-Install git hooks:
-```bash
-zscribe-manage-hooks [--install {commit,pr,both}] [--model MODEL_NAME]
-```
+After installation, ZScribe will automatically:
+- Generate a commit message when you make a commit (you can edit this message before finalizing the commit)
+- Generate a pull request description when you create a new pull request
 
-Remove git hooks:
-```bash
-zscribe-manage-hooks --remove {commit,pr,both}
-```
+### Manual Usage
 
-## Dynamic Model Selection
+While git hooks provide automatic functionality, you can also use ZScribe manually:
 
-ZScribe now dynamically fetches available models for AWS Bedrock and Ollama. This means:
+1. Generate a commit message:
+   ```bash
+   zscribe commit <commit1> <commit2> [--refine]
+   ```
 
-- For AWS Bedrock: The plugin will list all models available to your AWS account.
-- For Ollama: The plugin will list all models installed on your local Ollama instance.
+2. Generate a pull request description:
+   ```bash
+   zscribe pr <pr_number>
+   ```
 
-You can view available models by running any ZScribe command with an invalid model name, which will print the list of supported models for the selected provider.
+3. List available models:
+   ```bash
+   zscribe models
+   ```
+
+> **Note**: For manual invocations, you can use the `ZSCRIBE_MODEL` environment variable to specify the model:
+> ```bash
+> export ZSCRIBE_MODEL='gpt-4'
+> zscribe commit HEAD~1 HEAD
+> ```
+
+### Managing Models
+
+It's important to note that the model used by git hooks is separate from the one used for manual invocations. 
+
+- To update the model used by git hooks:
+  ```bash
+  zscribe hooks update --type {commit|pr|both} --model <new-model>
+  ```
+
+- The `ZSCRIBE_MODEL` environment variable is only used for manual invocations and does not affect git hooks.
+
+Always use the command-line interface to update the model for hooks. The `ZSCRIBE_MODEL` environment variable does not affect the model used by git hooks.
+
+## Examples
+
+1. Install git hooks with a specific model:
+   ```bash
+   zscribe hooks install --type both --model gpt-4
+   ```
+
+2. Update the model for the commit hook:
+   ```bash
+   zscribe hooks update --type commit --model claude-3-5-sonnet-20240620
+   ```
+
+3. Manually generate a commit message for the last commit:
+   ```bash
+   zscribe commit HEAD~1 HEAD
+   ```
+
+4. Manually generate a pull request description for PR #42:
+   ```bash
+   zscribe pr 42
+   ```
+
+5. List all available models:
+   ```bash
+   zscribe models
+   ```
+
+6. Manually generate a commit message using a specific model (does not affect git hooks):
+   ```bash
+   ZSCRIBE_MODEL=gpt-4 zscribe commit HEAD~1 HEAD
+   ```
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions to ZScribe are welcome! Here's how you can contribute:
 
-## License
+1. Fork the repository
+2. Create a new branch: `git checkout -b feature-branch-name`
+3. Make your changes and commit them: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature-branch-name`
+5. Submit a pull request
 
-This project is licensed under the MIT License.
+Please make sure to update tests as appropriate and adhere to the project's coding standards.
+
+---
+
+Made with ❤️ by Zithco. Happy coding! 🚀

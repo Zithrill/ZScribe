@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="ZScribe",
-    version="0.8.0",
+    version="0.10.0",
     author="Jake Gribschaw",
     author_email="jake@zithrill.io",
     description="A tool to generate commit messages and pull request descriptions using various AI providers",
@@ -19,11 +19,11 @@ setup(
         "openai",
         "boto3",
         "requests",
+        "click",
     ],
     extras_require={
         "bedrock": ["boto3"],
         "ollama": ["requests"],
-        "llm_studio": [],  # Add any specific requirements for LLM Studio
     },
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -38,10 +38,7 @@ setup(
     python_requires=">=3.7",
     entry_points={
         "console_scripts": [
-            "zscribe=scribe.main:main",
-            "zscribe-prepare-commit-msg=scribe.prepare_commit_msg:main",
-            "zscribe-manage-hooks=scribe.setup_git_hook:setup_git_hooks",
-            "zscribe-pr-hook=scribe.pr_hook_script:main",
+            "zscribe=scribe.zscribe_cli:cli",
         ],
     },
 )

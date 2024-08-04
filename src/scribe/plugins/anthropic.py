@@ -1,12 +1,11 @@
 import os
 from typing import List
-from anthropic import Anthropic, AnthropicError
+from anthropic import Anthropic, AnthropicError, HUMAN_PROMPT, AI_PROMPT
 from .base import BasePlugin
-import requests
-
 
 class AnthropicPlugin(BasePlugin):
     def __init__(self, model: str):
+        self.provider = "Anthropic"
         self.model = model
         self._client = None
 
@@ -25,28 +24,30 @@ class AnthropicPlugin(BasePlugin):
 
     @classmethod
     def list_models(cls) -> List[str]:
-        return ["claude-instant-1",
-                "claude-2.0",
-                "claude-2.1",
-                "claude-3-haiku-20240307",
-                "claude-3-sonnet-20240229",
-                "claude-3-opus-20240229",
-                "claude-3-5-sonnet-20240620",
-                ]
+        return [
+            "claude-2.1",
+            "claude-3-haiku-20240307",
+            "claude-3-sonnet-20240229",
+            "claude-3-opus-20240229",
+            "claude-3-5-sonnet-20240620",
+        ]
 
     def _generate_response(self, prompt: str) -> str:
-        if self.supported_models and self.model not in self.supported_models:
+        if self.model not in self.supported_models():
             raise ValueError(
-                f"Unsupported Anthropic model: {self.model}. Supported models are: {', '.join(self.supported_models)}")
+                f"Unsupported Anthropic model: {self.model}. Supported models are: {', '.join(self.supported_models())}"
+            )
 
         try:
-            response = self.client.completions.create(
+            response = self.client.messages.create(
                 model=self.model,
-                prompt=f"Human: {prompt}\n\nAssistant:",
-                max_tokens_to_sample=500,
+                max_tokens=500,
                 temperature=0.7,
+                messages=[
+                    {"role": "user", "content": prompt}
+                ]
             )
-            return response.completion.strip()
+            return response.content[0].text.strip()
         except AnthropicError as e:
             raise RuntimeError(f"Anthropic API error: {str(e)}")
 

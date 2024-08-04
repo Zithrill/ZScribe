@@ -6,6 +6,7 @@ import openai
 
 class OpenAIPlugin:
     def __init__(self, model: str):
+        self.provider = "Openapi"
         self.model = model
         self._client = None
 
