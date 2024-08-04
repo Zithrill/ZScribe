@@ -1,100 +1,112 @@
-# ZithScribe
+# ZScribe
 
-ZithScribe is a command-line tool that automatically generates meaningful commit messages and pull request descriptions using the Anthropic API. By analyzing the differences between git commits, it provides concise and informative messages, saving developers time and improving the quality of version control documentation.
+ZScribe is a command-line tool that automatically generates meaningful commit messages and pull request descriptions using various AI models. By analyzing the differences between git commits, it provides concise and informative messages, saving developers time and improving the quality of version control documentation.
 
 ## Installation
 
-To install ZithScribe, you can use pip:
+To install ZScribe, you can use pip:
 
 ```bash
-pip install ZithScribe
+pip install ZScribe
 ```
 
 ## Configuration
 
-Before using ZithScribe, make sure to set your Anthropic API key as an environment variable:
+ZScribe supports multiple AI providers through a plugin system. You can configure your preferred model using the `ZSCRIBE_MODEL` environment variable or the `--model` command-line argument.
 
+### Supported Models and Providers
+
+- OpenAI:
+  - `gpt-3.5-turbo`
+  - `gpt-4`
+- Anthropic:
+  - `claude-2`
+  - `claude-instant-1`
+- AWS Bedrock:
+  - `anthropic.claude-v2`
+  - `ai21.j2-ultra-v1`
+  - `amazon.titan-text-express-v1`
+  - (Note: Available models may vary based on your AWS Bedrock access)
+- Ollama:
+  - `llama2`
+  - `mistral-7b`
+  - (Note: Available models depend on your local Ollama installation)
+
+Example:
 ```bash
-export ANTHROPIC_API_KEY='your-api-key-here'
+export ZSCRIBE_MODEL='gpt-4'
 ```
+
+## API Keys and Configuration
+
+### OpenAI
+
+1. Go to [OpenAI's website](https://openai.com/) and sign up or log in.
+2. Navigate to the API section and create a new API key.
+3. Set the environment variable:
+   ```bash
+   export OPENAI_API_KEY='your-api-key-here'
+   ```
+
+### Anthropic
+
+1. Go to [Anthropic's website](https://www.anthropic.com/) and sign up for API access.
+2. Once approved, generate an API key from your account dashboard.
+3. Set the environment variable:
+   ```bash
+   export ANTHROPIC_API_KEY='your-api-key-here'
+   ```
+
+### AWS Bedrock
+
+1. Sign up for an [AWS account](https://aws.amazon.com/) if you don't have one.
+2. Request access to AWS Bedrock in your AWS console.
+3. Set up AWS CLI and configure it with your credentials:
+   ```bash
+   aws configure
+   ```
+   Or set environment variables:
+   ```bash
+   export AWS_ACCESS_KEY_ID='your-access-key'
+   export AWS_SECRET_ACCESS_KEY='your-secret-key'
+   export AWS_DEFAULT_REGION='your-preferred-region'
+   ```
+
+### Ollama
+
+1. Install Ollama on your local machine following instructions from the [Ollama website](https://ollama.ai/).
+2. No API key is required as Ollama runs locally.
 
 ## Usage
 
-### Managing Git Hooks
-
-ZithScribe uses Git hooks to automatically generate commit messages and pull request descriptions. By default, running the hook management script will install both the commit message and pull request hooks.
-
-To manage the hooks:
-
+Generate a commit message:
 ```bash
-zithScribe-manage-hooks
+zscribe commit1 commit2 [--model MODEL_NAME]
 ```
 
-This will install both hooks by default.
-
-To install or remove specific hooks:
-
-- Install only the commit message hook:
-  ```
-  zithScribe-manage-hooks --install commit
-  ```
-
-- Install only the pull request hook:
-  ```
-  zithScribe-manage-hooks --install pr
-  ```
-
-- Remove the commit message hook:
-  ```
-  zithScribe-manage-hooks --remove commit
-  ```
-
-- Remove the pull request hook:
-  ```
-  zithScribe-manage-hooks --remove pr
-  ```
-
-- Remove both hooks:
-  ```
-  zithScribe-manage-hooks --remove both
-  ```
-
-### Generating Commit Messages
-
-Once the commit message hook is installed, ZithScribe will automatically generate a commit message when you run `git commit`. The generated message will be pre-filled in your default editor, where you can review and modify it if necessary.
-
-### Generating Pull Request Descriptions
-
-With the pull request hook installed, ZithScribe will automatically generate a pull request description when you create a new pull request using `git pull-request`. The generated description will be added to your pull request on GitHub.
-
-## Development
-
-To set up the development environment:
-
-1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/ZithScribe.git
-   cd ZithScribe
-   ```
-
-2. Create a virtual environment and activate it:
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-   ```
-
-3. Install the package in editable mode:
-   ```
-   pip install -e .
-   ```
-
-## Running Tests
-
-To run the unit tests:
-
+Generate a pull request description:
 ```bash
-python -m unittest discover tests
+zscribe --pr PR_NUMBER [--model MODEL_NAME]
 ```
+
+Install git hooks:
+```bash
+zscribe-manage-hooks [--install {commit,pr,both}] [--model MODEL_NAME]
+```
+
+Remove git hooks:
+```bash
+zscribe-manage-hooks --remove {commit,pr,both}
+```
+
+## Dynamic Model Selection
+
+ZScribe now dynamically fetches available models for AWS Bedrock and Ollama. This means:
+
+- For AWS Bedrock: The plugin will list all models available to your AWS account.
+- For Ollama: The plugin will list all models installed on your local Ollama instance.
+
+You can view available models by running any ZScribe command with an invalid model name, which will print the list of supported models for the selected provider.
 
 ## Contributing
 
@@ -103,7 +115,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the MIT License.
-
-## Acknowledgments
-
-This project uses the Anthropic API for generating commit messages and pull request descriptions.

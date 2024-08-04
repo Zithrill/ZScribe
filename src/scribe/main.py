@@ -1,9 +1,12 @@
+# src/scribe/main.py
+
 import argparse
 import os
 import sys
 from scribe.git_utils import get_git_diff, parse_git_diff
-from scribe.anthropic_api import generate_commit_message, refine_commit_message, generate_pull_request_message
 from scribe.pull_request_utils import get_pull_request_info, get_pull_request_diff
+from scribe.config import get_model_config, MODEL_PROVIDER_MAP
+from scribe.plugins import get_plugin
 
 def main():
     parser = argparse.ArgumentParser(description="Generate a commit message or pull request description based on git diff.")
@@ -11,10 +14,17 @@ def main():
     parser.add_argument("commit1", nargs="?", help="The base commit hash")
     parser.add_argument("commit2", nargs="?", help="The compare commit hash")
     parser.add_argument("--refine", action="store_true", help="Refine the generated commit message")
+    parser.add_argument("--model", choices=list(MODEL_PROVIDER_MAP.keys()), help="Specify the AI model to use")
     args = parser.parse_args()
 
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        print("Error: ANTHROPIC_API_KEY environment variable is not set.")
+    if args.model:
+        os.environ['ZSCRIBE_MODEL'] = args.model
+
+    try:
+        config = get_model_config()
+        plugin = get_plugin(config)
+    except ValueError as e:
+        print(f"Error: {str(e)}")
         sys.exit(1)
 
     if args.pr:
@@ -23,14 +33,14 @@ def main():
             base_branch, head_branch, commit_messages = get_pull_request_info(args.pr)
             diff = get_pull_request_diff(base_branch, head_branch)
             diff_summary = parse_git_diff(diff)
-            pr_message = generate_pull_request_message(diff_summary, commit_messages)
-            print("Generated Pull Request Description:")
+            pr_message = plugin.generate_pull_request_message(diff_summary, commit_messages)
+            print(f"Generated Pull Request Description (using {config['model']}):")
             print(pr_message)
         except Exception as e:
             print(f"Error generating pull request description: {e}")
             sys.exit(1)
     else:
-        # Existing commit message generation logic
+        # Commit message generation logic
         if not args.commit1 or not args.commit2:
             print("Error: Both commit1 and commit2 are required when not generating a pull request description.")
             sys.exit(1)
@@ -44,18 +54,16 @@ def main():
         # Parse the diff
         diff_summary = parse_git_diff(diff)
 
-        # Generate commit message using Anthropic API
+        # Generate commit message using the selected plugin
         try:
-            commit_message = generate_commit_message(diff_summary)
+            commit_message = plugin.generate_commit_message(diff_summary)
             if args.refine:
-                commit_message = refine_commit_message(commit_message, diff_summary)
+                commit_message = plugin.refine_commit_message(commit_message, diff_summary)
+            print(f"Generated Commit Message (using {config['model']}):")
+            print(commit_message)
         except Exception as e:
             print(f"Error generating commit message: {e}")
             sys.exit(1)
-
-        # Print the generated commit message
-        print("Generated Commit Message:")
-        print(commit_message)
 
 if __name__ == "__main__":
     main()

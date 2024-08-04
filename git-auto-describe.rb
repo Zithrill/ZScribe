@@ -1,9 +1,9 @@
 class GitAutoDescribe < Formula
   include Language::Python::Virtualenv
 
-  desc "Generate commit messages using the Anthropic API"
-  homepage "https://github.com/yourusername/git-commit-message-generator"
-  url "https://github.com/yourusername/git-commit-message-generator/archive/v0.1.0.tar.gz"
+  desc "Generate commit messages using ML"
+  homepage "https://github.com/Zithrill/ZScribe"
+  url "https://github.com/Zithrill/ZScribe/archive/v0.1.0.tar.gz"
   sha256 "INSERT_SHA256_HERE"  # You'll need to calculate this when you have a release
 
   depends_on "python@3.9"

@@ -1,1 +1,4 @@
-anthropic==0.3.0
+anthropic
+boto3
+openai
+requests
