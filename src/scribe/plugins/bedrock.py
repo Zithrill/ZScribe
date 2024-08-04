@@ -2,7 +2,7 @@
 
 import json
 import boto3
-from botocore.exceptions import ClientError
+from botocore.exceptions import BotoCoreError, ClientError, NoRegionError, NoCredentialsError, NoAuthTokenError
 from typing import List
 from .base import BasePlugin
 
@@ -10,19 +10,31 @@ from .base import BasePlugin
 class BedrockPlugin(BasePlugin):
     def __init__(self, model: str):
         self.model = model
-        self.client = boto3.client('bedrock-runtime')
+        self._client = None
 
     @property
-    def supported_models(self) -> List[str]:
-        return self._get_available_models()
+    def client(self):
+        if self._client is None:
+            try:
+                self._client = boto3.client('bedrock-runtime')
+            except (NoRegionError, NoCredentialsError, NoAuthTokenError) as e:
+                print("Please review README for setting up AWS Bedrock runtime")
+                raise e
 
-    def _get_available_models(self) -> List[str]:
+        return self._client
+
+    @classmethod
+    def supported_models(cls) -> List[str]:
+        return cls.list_models()
+
+    @classmethod
+    def list_models(cls) -> List[str]:
         try:
             bedrock = boto3.client('bedrock')
             response = bedrock.list_foundation_models()
             models = [model['modelId'] for model in response['modelSummaries']]
             return models
-        except ClientError as e:
+        except BotoCoreError as e:
             print(f"Warning: Failed to fetch Bedrock models: {str(e)}")
             return []
 

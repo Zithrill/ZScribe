@@ -1,5 +1,3 @@
-# src/scribe/plugins/ollama.py
-
 import os
 import requests
 from typing import List
@@ -11,13 +9,14 @@ class OllamaPlugin(BasePlugin):
         self.base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
         self.model = model
 
-    @property
-    def supported_models(self) -> List[str]:
-        return self._get_available_models()
+    @classmethod
+    def supported_models(cls) -> List[str]:
+        return cls.list_models()
 
-    def _get_available_models(self) -> List[str]:
+    @classmethod
+    def list_models(cls) -> List[str]:
         try:
-            response = requests.get(f"{self.base_url}/api/tags", timeout=5)
+            response = requests.get(f"{os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434')}/api/tags", timeout=5)
             response.raise_for_status()
             return [model['name'] for model in response.json()['models']]
         except requests.RequestException as e:
@@ -109,9 +108,3 @@ Please follow these guidelines:
 Generate the pull request description:"""
 
         return self._generate_response(prompt)
-
-# Example usage:
-# plugin = OllamaPlugin("mistral-7b")
-# print(f"Available models: {plugin.supported_models}")
-# commit_message = plugin.generate_commit_message("Files changed: 2\nAdditions: 10\nDeletions: 5\nModified files:\n  - src/main.py\n  - tests/test_main.py")
-# print(commit_message)

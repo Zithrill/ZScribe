@@ -7,33 +7,32 @@ import requests
 
 class AnthropicPlugin(BasePlugin):
     def __init__(self, model: str):
-        self.api_key = os.getenv("ANTHROPIC_API_KEY")
-        if not self.api_key:
-            raise ValueError("ANTHROPIC_API_KEY environment variable is not set")
-        self.client = Anthropic(api_key=self.api_key)
         self.model = model
+        self._client = None
 
     @property
-    def supported_models(self) -> List[str]:
-        return self._get_available_models()
+    def client(self):
+        if self._client is None:
+            api_key = os.getenv("ANTHROPIC_API_KEY")
+            if not api_key:
+                raise ValueError("ANTHROPIC_API_KEY environment variable is not set")
+            self._client = Anthropic(api_key=api_key)
+        return self._client
 
-    def _get_available_models(self) -> List[str]:
-        try:
-            headers = {
-                "Content-Type": "application/json",
-                "X-Api-Key": self.api_key,
-            }
-            response = requests.get("https://api.anthropic.com/v1/models", headers=headers)
+    @classmethod
+    def supported_models(cls) -> List[str]:
+        return cls.list_models()
 
-            if response.status_code == 200:
-                models_data = response.json()
-                return [model['name'] for model in models_data['models']]
-            else:
-                print(f"Error fetching models: {response.status_code}, {response.text}")
-                return []
-        except Exception as e:
-            print(f"Warning: Failed to fetch Anthropic models: {str(e)}")
-            return []
+    @classmethod
+    def list_models(cls) -> List[str]:
+        return ["claude-instant-1",
+                "claude-2.0",
+                "claude-2.1",
+                "claude-3-haiku-20240307",
+                "claude-3-sonnet-20240229",
+                "claude-3-opus-20240229",
+                "claude-3-5-sonnet-20240620",
+                ]
 
     def _generate_response(self, prompt: str) -> str:
         if self.supported_models and self.model not in self.supported_models:

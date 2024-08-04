@@ -6,7 +6,7 @@ import sys
 from scribe.git_utils import get_git_diff, parse_git_diff
 from scribe.pull_request_utils import get_pull_request_info, get_pull_request_diff
 from scribe.config import get_model_config, MODEL_PROVIDER_MAP
-from scribe.plugins import get_plugin
+from scribe.plugins import get_plugin, list_available_models
 
 def main():
     parser = argparse.ArgumentParser(description="Generate a commit message or pull request description based on git diff.")
@@ -15,7 +15,17 @@ def main():
     parser.add_argument("commit2", nargs="?", help="The compare commit hash")
     parser.add_argument("--refine", action="store_true", help="Refine the generated commit message")
     parser.add_argument("--model", choices=list(MODEL_PROVIDER_MAP.keys()), help="Specify the AI model to use")
+    parser.add_argument("--list-models", action="store_true", help="List all available models")
     args = parser.parse_args()
+
+    if args.list_models:
+        print("Available models:")
+        print(list_available_models())
+        for provider, models in list_available_models().items():
+            print(f"\n{provider.capitalize()}:")
+            for model in models:
+                print(f"  - {model}")
+        sys.exit(0)
 
     if args.model:
         os.environ['ZSCRIBE_MODEL'] = args.model
