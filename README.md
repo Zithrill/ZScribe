@@ -2,7 +2,8 @@
 
 ZScribe is an intelligent tool that leverages AI to automatically generate meaningful commit messages and pull request descriptions. By analyzing git diffs, ZScribe provides concise and informative messages, saving developers time and improving the quality of version control documentation.
 
-![ZScribe Logo](https://example.com/zscribe-logo.png)
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/T6T211DCA3)
+
 
 ## Table of Contents
 
