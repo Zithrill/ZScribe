@@ -19,7 +19,7 @@ def prepare_commit_msg(commit_msg_file):
         # No changes staged, exit without modifying the commit message
         return
 
-    # Parse the diff
+    # Parse the diff using our new parse_git_diff function
     diff_summary = parse_git_diff(diff)
 
     try:
