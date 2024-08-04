@@ -66,7 +66,7 @@ class BedrockPlugin(BasePlugin):
                 contentType="application/json",
             )
             response_body = json.loads(response.get("body").read())
-            return response_body.get("completion", "").strip()
+            return str(response_body.get("completion", "").strip())
         except ClientError as e:
             raise RuntimeError(f"Bedrock API error: {str(e)}")
 

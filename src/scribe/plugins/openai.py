@@ -56,7 +56,7 @@ Please follow these guidelines:
             temperature=0.7,
         )
 
-        return response.choices[0].message.content.strip()
+        return str(response.choices[0].message.content.strip())
 
     def refine_commit_message(self, message: str, diff_summary: str) -> str:
         prompt = f"""You are an AI assistant specialized in refining git commit messages. You've been given the following commit message:
@@ -87,7 +87,7 @@ Please refine the commit message to ensure it:
             temperature=0.5,
         )
 
-        return response.choices[0].message.content.strip()
+        return str(response.choices[0].message.content.strip())
 
     def generate_pull_request_message(
         self, diff_summary: str, commit_messages: List[str]
@@ -127,4 +127,4 @@ Please follow these guidelines:
             temperature=0.7,
         )
 
-        return response.choices[0].message.content.strip()
+        return str(response.choices[0].message.content.strip())

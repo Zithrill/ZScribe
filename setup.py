@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="zscribe",
-    version="0.1.0",
+    version="0.1.2",
     author="Jake Gribschaw",
     author_email="jake@zithrill.io",
     description="A tool to generate commit messages and pull request descriptions using various AI providers",
@@ -20,11 +20,10 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
     ],
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     install_requires=[
         "anthropic",
         "openai",
@@ -43,6 +42,7 @@ setup(
             "pylint",
             "mypy",
             "bandit",
+            "types-requests"
         ],
     },
     entry_points={

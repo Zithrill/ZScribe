@@ -4,7 +4,7 @@ import re
 
 
 def get_current_version():
-    with open('setup.py', 'r') as f:
+    with open("setup.py", "r") as f:
         content = f.read()
     match = re.search(r'version\s*=\s*["\'](.+?)["\']', content)
     if match:
@@ -14,16 +14,17 @@ def get_current_version():
 
 def get_latest_tag_version():
     try:
-        latest_tag = subprocess.check_output(['git', 'describe', '--tags', '--abbrev=0'],
-                                             universal_newlines=True).strip()
-        return latest_tag.lstrip('v')
+        latest_tag = subprocess.check_output(
+            ["git", "describe", "--tags", "--abbrev=0"], universal_newlines=True
+        ).strip()
+        return latest_tag.lstrip("v")
     except subprocess.CalledProcessError:
-        return '0.0.0'  # If no tags exist
+        return "0.0.0"  # If no tags exist
 
 
 def compare_versions(current, latest):
-    current_parts = list(map(int, current.split('.')))
-    latest_parts = list(map(int, latest.split('.')))
+    current_parts = list(map(int, current.split(".")))
+    latest_parts = list(map(int, latest.split(".")))
 
     for i in range(max(len(current_parts), len(latest_parts))):
         current_part = current_parts[i] if i < len(current_parts) else 0
@@ -37,7 +38,7 @@ def compare_versions(current, latest):
     return False  # Versions are equal
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     current_version = get_current_version()
     latest_tag_version = get_latest_tag_version()
 

@@ -1,4 +1,4 @@
-.PHONY: test install clean
+.PHONY: test install clean secure
 
 test:
 	pytest tests/
@@ -15,3 +15,6 @@ lint:
 
 format:
 	black src/ tests/
+
+secure:
+	bandit -c bandit.yaml -r .

@@ -46,7 +46,7 @@ class AnthropicPlugin(BasePlugin):
                 temperature=0.7,
                 messages=[{"role": "user", "content": prompt}],
             )
-            return response.content[0].text.strip()
+            return str(response.content[0].text.strip())
         except AnthropicError as e:
             raise RuntimeError(f"Anthropic API error: {str(e)}")
 

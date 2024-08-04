@@ -39,7 +39,7 @@ def determine_context_lines(hunk_lines: List[str]) -> int:
 def parse_git_diff(diff: str) -> str:
     files_changed: Dict[str, List[List[str]]] = {}
     current_file = ""
-    hunk_changes = []
+    hunk_changes: List[str] = []
     additions = 0
     deletions = 0
     file_pattern = re.compile(r"^(\+\+\+|\-\-\-) [ab]/(.+)$")
@@ -76,15 +76,15 @@ def parse_git_diff(diff: str) -> str:
 
         for hunk in hunks:
             context_lines = determine_context_lines(hunk)
-            changes = []
-            context = []
+            context: List[str] = []
+            changes: List[Tuple[str, List[str]]] = []
 
             for line in hunk[1:]:  # Skip the hunk header
                 if line.startswith(("+", "-")):
                     if context:
                         changes.append(("context", context))
                         context = []
-                    changes.append(("change", line))
+                    changes.append(("change", [line]))
                 else:
                     context.append(line)
                     if len(context) > context_lines * 2:

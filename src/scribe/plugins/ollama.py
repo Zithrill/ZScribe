@@ -34,7 +34,7 @@ class OllamaPlugin(BasePlugin):
         try:
             response = requests.post(url, json=data, timeout=30)
             response.raise_for_status()
-            return response.json()["response"].strip()
+            return str(response.json()["response"].strip())
         except requests.RequestException as e:
             raise RuntimeError(f"Ollama API error: {str(e)}")
 
