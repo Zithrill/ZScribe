@@ -4,6 +4,7 @@ import sys
 import subprocess
 import argparse
 
+
 def get_git_hooks_dir():
     try:
         git_dir = subprocess.check_output(['git', 'rev-parse', '--git-dir']).decode('utf-8').strip()
@@ -11,6 +12,7 @@ def get_git_hooks_dir():
     except subprocess.CalledProcessError:
         print("Error: Not a git repository. Please run this script from within a git repository.")
         sys.exit(1)
+
 
 def install_hook(hooks_dir, hook_name, script_name):
     hook_path = os.path.join(hooks_dir, hook_name)
@@ -22,6 +24,7 @@ def install_hook(hooks_dir, hook_name, script_name):
     os.chmod(hook_path, 0o755)
     print(f"Installed {hook_name} hook.")
 
+
 def remove_hook(hooks_dir, hook_name):
     hook_path = os.path.join(hooks_dir, hook_name)
     if os.path.exists(hook_path):
@@ -29,6 +32,7 @@ def remove_hook(hooks_dir, hook_name):
         print(f"Removed {hook_name} hook.")
     else:
         print(f"{hook_name} hook not found.")
+
 
 def setup_git_hooks():
     parser = argparse.ArgumentParser(description="Install or remove ZithScribe git hooks.")
@@ -53,6 +57,7 @@ def setup_git_hooks():
         install_hook(hooks_dir, 'prepare-commit-msg', 'zithScribe-prepare-commit-msg')
         install_hook(hooks_dir, 'post-create-pull-request', 'zithScribe-pr-hook')
         print("Installed both commit message and pull request hooks by default.")
+
 
 if __name__ == "__main__":
     setup_git_hooks()
