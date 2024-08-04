@@ -1,25 +1,16 @@
 # ZithScribe
 
-ZithScribe is a command-line tool that automatically generates meaningful commit messages using the Anthropic API. By analyzing the differences between git commits, it provides concise and informative commit messages, saving developers time and improving the quality of version control documentation.
-
-## Features
-
-- Generates commit messages based on git diffs
-- Uses Anthropic's AI to create human-readable, context-aware messages
-- Supports refinement of generated messages for improved accuracy
-- Easy to use command-line interface
-- Can be integrated as a Git hook for automatic commit message generation
-- Automated setup of Git hook
+ZithScribe is a command-line tool that automatically generates meaningful commit messages and pull request descriptions using the Anthropic API. By analyzing the differences between git commits, it provides concise and informative messages, saving developers time and improving the quality of version control documentation.
 
 ## Installation
 
 To install ZithScribe, you can use pip:
 
 ```bash
-pip install zithScribe
+pip install ZithScribe
 ```
 
-## Usage
+## Configuration
 
 Before using ZithScribe, make sure to set your Anthropic API key as an environment variable:
 
@@ -27,52 +18,54 @@ Before using ZithScribe, make sure to set your Anthropic API key as an environme
 export ANTHROPIC_API_KEY='your-api-key-here'
 ```
 
-### As a standalone tool
+## Usage
 
-To generate a commit message, use the following command:
+### Managing Git Hooks
 
-```bash
-zithScribe <commit1> <commit2>
-```
+ZithScribe uses Git hooks to automatically generate commit messages and pull request descriptions. By default, running the hook management script will install both the commit message and pull request hooks.
 
-Replace `<commit1>` and `<commit2>` with the commit hashes you want to compare. For example:
+To manage the hooks:
 
 ```bash
-zithScribe HEAD~1 HEAD
+zithScribe-manage-hooks
 ```
 
-This will generate a commit message based on the changes between the current HEAD and the previous commit.
+This will install both hooks by default.
 
-To use the refinement feature, add the `--refine` flag:
+To install or remove specific hooks:
 
-```bash
-zithScribe HEAD~1 HEAD --refine
-```
+- Install only the commit message hook:
+  ```
+  zithScribe-manage-hooks --install commit
+  ```
 
-### Setting up the Git hook
+- Install only the pull request hook:
+  ```
+  zithScribe-manage-hooks --install pr
+  ```
 
-To use ZithScribe automatically when you make a commit, you can set it up as a Git hook. We've provided a script to automate this process:
+- Remove the commit message hook:
+  ```
+  zithScribe-manage-hooks --remove commit
+  ```
 
-1. Navigate to your Git repository:
-   ```
-   cd /path/to/your/repo
-   ```
+- Remove the pull request hook:
+  ```
+  zithScribe-manage-hooks --remove pr
+  ```
 
-2. Run the setup script:
-   ```
-   zithScribe-setup-hook
-   ```
+- Remove both hooks:
+  ```
+  zithScribe-manage-hooks --remove both
+  ```
 
-This script will create the necessary Git hook in your repository. Now, whenever you run `git commit`, ZithScribe will automatically generate a commit message based on your staged changes.
+### Generating Commit Messages
 
-If you want to set up the hook manually, you can create a file named `prepare-commit-msg` in the `.git/hooks/` directory with the following content:
+Once the commit message hook is installed, ZithScribe will automatically generate a commit message when you run `git commit`. The generated message will be pre-filled in your default editor, where you can review and modify it if necessary.
 
-```bash
-#!/bin/sh
-zithScribe-prepare-commit-msg "$1"
-```
+### Generating Pull Request Descriptions
 
-Make sure to make the file executable (`chmod +x .git/hooks/prepare-commit-msg`).
+With the pull request hook installed, ZithScribe will automatically generate a pull request description when you create a new pull request using `git pull-request`. The generated description will be added to your pull request on GitHub.
 
 ## Development
 
@@ -80,8 +73,8 @@ To set up the development environment:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/gitAutoDescribe.git
-   cd gitAutoDescribe
+   git clone https://github.com/yourusername/ZithScribe.git
+   cd ZithScribe
    ```
 
 2. Create a virtual environment and activate it:
@@ -113,4 +106,4 @@ This project is licensed under the MIT License.
 
 ## Acknowledgments
 
-This project uses the Anthropic API for generating commit messages.
+This project uses the Anthropic API for generating commit messages and pull request descriptions.

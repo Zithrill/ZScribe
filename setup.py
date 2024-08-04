@@ -5,10 +5,10 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="ZithScribe",
-    version="0.5.0",
+    version="0.7.0",
     author="Jake Gribschaw",
     author_email="jake@zithrill.io",
-    description="A tool to generate commit messages using ML",
+    description="A tool to generate commit messages and pull request descriptions using ML",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/yourusername/gitAutoDescribe",
@@ -32,8 +32,13 @@ setup(
         "console_scripts": [
             "zithScribe=scribe.main:main",
             "zithScribe-prepare-commit-msg=scribe.prepare_commit_msg:main",
-            "zithScribe-setup-hook=scribe.setup_git_hook:setup_git_hook",
+            "zithScribe-manage-hooks=scribe.setup_git_hook:setup_git_hooks",
+            "zithScribe-pr-hook=scribe.pr_hook_script:main",
         ],
     },
-    scripts=['src/scribe/prepare_commit_msg.py', 'src/scribe/setup_git_hook.py'],
+    scripts=[
+        'src/scribe/prepare_commit_msg.py',
+        'src/scribe/setup_git_hook.py',
+        'src/scribe/pr_hook_script.py'
+    ],
 )
