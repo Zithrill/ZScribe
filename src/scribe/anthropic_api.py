@@ -7,7 +7,7 @@ client = anthropic.Anthropic(
 
 
 def generate_commit_message(diff_summary):
-    prompt = f"""As an AI assistant specialized in generating git commit messages, your task is to create a concise and informative commit message based on the following git diff summary:
+    prompt = f"""Human: As an AI assistant specialized in generating git commit messages, your task is to create a concise and informative commit message based on the following git diff summary:
 
 {diff_summary}
 
@@ -18,7 +18,8 @@ Please follow these guidelines:
 4. Wrap the body at 72 characters.
 5. Use bullet points for multiple changes if necessary.
 
-Generated Commit Message:"""
+
+Assistant:"""
 
     response = client.completions.create(
         prompt=prompt,
@@ -32,7 +33,7 @@ Generated Commit Message:"""
 
 
 def refine_commit_message(message, diff_summary):
-    prompt = f"""You are an AI assistant specialized in refining git commit messages. You've been given the following commit message:
+    prompt = f"""Human: You are an AI assistant specialized in refining git commit messages. You've been given the following commit message:
 
 {message}
 
@@ -45,7 +46,8 @@ Please refine the commit message to ensure it:
 2. Follows the commit message best practices (50 char subject line, detailed body, etc.).
 3. Is clear, concise, and informative.
 
-Refined Commit Message:"""
+
+Assistant:"""
 
     response = client.completions.create(
         prompt=prompt,

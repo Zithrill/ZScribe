@@ -4,14 +4,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="git-commit-message-generator",
-    version="0.2.0",  # Updated version
-    author="Your Name",
-    author_email="your.email@example.com",
-    description="A tool to generate commit messages using the Anthropic API",
+    name="ZithScribe",
+    version="0.5.0",
+    author="Jake Gribschaw",
+    author_email="jake@zithrill.io",
+    description="A tool to generate commit messages using ML",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/git-commit-message-generator",
+    url="https://github.com/yourusername/gitAutoDescribe",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     install_requires=[
@@ -30,7 +30,10 @@ setup(
     python_requires=">=3.7",
     entry_points={
         "console_scripts": [
-            "git-commit-message-generator=commit_message_generator.main:main",
+            "zithScribe=scribe.main:main",
+            "zithScribe-prepare-commit-msg=scribe.prepare_commit_msg:main",
+            "zithScribe-setup-hook=scribe.setup_git_hook:setup_git_hook",
         ],
     },
+    scripts=['src/scribe/prepare_commit_msg.py', 'src/scribe/setup_git_hook.py'],
 )

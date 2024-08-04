@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from auto_describe.git_utils import get_git_diff, parse_git_diff
-from auto_describe.anthropic_api import generate_commit_message, refine_commit_message
-from auto_describe.main import main
+from scribe.git_utils import get_git_diff, parse_git_diff
+from scribe.anthropic_api import generate_commit_message, refine_commit_message
+from scribe.main import main
 
 
 class TestAutoDescribe(unittest.TestCase):
@@ -73,10 +73,10 @@ Modified files:
         self.assertEqual(message, "Refined mock commit message")
         mock_client.completions.create.assert_called_once()
 
-    @patch('commit_message_generator.main.get_git_diff')
-    @patch('commit_message_generator.main.parse_git_diff')
-    @patch('commit_message_generator.main.generate_commit_message')
-    @patch('commit_message_generator.main.refine_commit_message')
+    @patch('scribe.main.get_git_diff')
+    @patch('scribe.main.parse_git_diff')
+    @patch('scribe.main.generate_commit_message')
+    @patch('scribe.main.refine_commit_message')
     def test_main(self, mock_refine, mock_generate, mock_parse, mock_get_diff):
         mock_get_diff.return_value = "mock diff"
         mock_parse.return_value = "mock summary"

@@ -1,8 +1,8 @@
 import argparse
 import os
 import sys
-from git_utils import get_git_diff, parse_git_diff
-from anthropic_api import generate_commit_message, refine_commit_message
+from scribe.git_utils import get_git_diff, parse_git_diff
+from scribe.anthropic_api import generate_commit_message, refine_commit_message
 
 def main():
     parser = argparse.ArgumentParser(description="Generate a commit message based on git diff.")
