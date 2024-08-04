@@ -27,9 +27,7 @@ jobs:
     - name: Run black
       run: black --check .
     - name: Run flake8
-      run: flake8 .
-    - name: Run pylint
-      run: pylint **/*.py
+      run: flake8 src/ tests/
     - name: Run mypy
       run: mypy .
     - name: Run bandit

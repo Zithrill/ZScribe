@@ -1,4 +1,3 @@
-import pytest
 from scribe.plugins import get_plugin, list_available_models
 from scribe.plugins.openai import OpenAIPlugin
 from scribe.plugins.anthropic import AnthropicPlugin

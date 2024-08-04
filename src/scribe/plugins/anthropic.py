@@ -1,6 +1,6 @@
 import os
 from typing import List
-from anthropic import Anthropic, AnthropicError, HUMAN_PROMPT, AI_PROMPT
+from anthropic import Anthropic, AnthropicError
 from .base import BasePlugin
 
 
@@ -109,7 +109,7 @@ Please follow these guidelines:
 6. Include any necessary instructions for testing or reviewing the changes.
 7. If applicable, reference any related issues or tickets.
 8. Use markdown formatting for better readability.
-9. Only return the pull request description, do not prompt the user for information. 
+9. Only return the pull request description, do not prompt the user for information.
 
 Generate the pull request description:"""
 

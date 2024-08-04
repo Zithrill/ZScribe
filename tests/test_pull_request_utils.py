@@ -1,7 +1,7 @@
 import subprocess
 
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from scribe.pull_request_utils import get_pull_request_info, get_pull_request_diff
 
 

@@ -36,14 +36,7 @@ setup(
         "pytest-mock",
     ],
     extras_require={
-        "dev": [
-            "black",
-            "flake8",
-            "pylint",
-            "mypy",
-            "bandit",
-            "types-requests"
-        ],
+        "dev": ["black", "flake8", "pylint", "mypy", "bandit", "types-requests"],
     },
     entry_points={
         "console_scripts": [

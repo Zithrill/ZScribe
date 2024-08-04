@@ -68,7 +68,7 @@ def parse_git_diff(diff: str) -> str:
     summary = f"Files changed: {len(files_changed)}\n"
     summary += f"Additions: {additions}\n"
     summary += f"Deletions: {deletions}\n"
-    summary += f"Modified files with changes:\n\n"
+    summary += "Modified files with changes:\n\n"
 
     for file, hunks in files_changed.items():
         summary += f"File: {file}\n"
