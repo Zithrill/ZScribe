@@ -26,18 +26,18 @@ index 2345678..901bcde 100644
 
 
 def test_get_git_diff(mocker):
-    mock_run = mocker.patch('subprocess.run')
+    mock_run = mocker.patch("subprocess.run")
     mock_run.return_value.stdout = "Mock diff output"
     mock_run.return_value.returncode = 0
 
-    result = get_git_diff('commit1', 'commit2')
+    result = get_git_diff("commit1", "commit2")
     assert result == "Mock diff output"
 
     mock_run.assert_called_once_with(
         ["git", "diff", "commit1", "commit2"],
         capture_output=True,
         text=True,
-        check=True
+        check=True,
     )
 
 
@@ -59,8 +59,8 @@ def test_parse_git_diff(sample_diff):
     assert "  Change:" in summary
 
     # Check for specific changes in file1.py
-    assert "-    print(\"Hello\")" in summary
-    assert "+    print(\"Hello, World!\")" in summary
+    assert '-    print("Hello")' in summary
+    assert '+    print("Hello, World!")' in summary
     assert "+    return True" in summary
 
     # Check for specific changes in file2.py

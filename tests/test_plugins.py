@@ -5,6 +5,7 @@ from scribe.plugins.anthropic import AnthropicPlugin
 from scribe.plugins.bedrock import BedrockPlugin
 from scribe.plugins.ollama import OllamaPlugin
 
+
 def test_get_plugin():
     config = {"provider": "openai", "model": "gpt-3.5-turbo"}
     plugin = get_plugin(config)
@@ -22,11 +23,23 @@ def test_get_plugin():
     plugin = get_plugin(config)
     assert isinstance(plugin, OllamaPlugin)
 
+
 def test_list_available_models(mocker):
-    mocker.patch('scribe.plugins.openai.OpenAIPlugin.list_models', return_value=["gpt-3.5-turbo", "gpt-4"])
-    mocker.patch('scribe.plugins.anthropic.AnthropicPlugin.list_models', return_value=["claude-3-5-sonnet-20240620"])
-    mocker.patch('scribe.plugins.bedrock.BedrockPlugin.list_models', return_value=["anthropic.claude-v2"])
-    mocker.patch('scribe.plugins.ollama.OllamaPlugin.list_models', return_value=["llama2"])
+    mocker.patch(
+        "scribe.plugins.openai.OpenAIPlugin.list_models",
+        return_value=["gpt-3.5-turbo", "gpt-4"],
+    )
+    mocker.patch(
+        "scribe.plugins.anthropic.AnthropicPlugin.list_models",
+        return_value=["claude-3-5-sonnet-20240620"],
+    )
+    mocker.patch(
+        "scribe.plugins.bedrock.BedrockPlugin.list_models",
+        return_value=["anthropic.claude-v2"],
+    )
+    mocker.patch(
+        "scribe.plugins.ollama.OllamaPlugin.list_models", return_value=["llama2"]
+    )
 
     models = list_available_models()
     assert isinstance(models, dict)

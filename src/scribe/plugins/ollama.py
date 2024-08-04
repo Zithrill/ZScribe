@@ -17,20 +17,19 @@ class OllamaPlugin(BasePlugin):
     @classmethod
     def list_models(cls) -> List[str]:
         try:
-            response = requests.get(f"{os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434')}/api/tags", timeout=5)
+            response = requests.get(
+                f"{os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434')}/api/tags",
+                timeout=5,
+            )
             response.raise_for_status()
-            return [model['name'] for model in response.json()['models']]
+            return [model["name"] for model in response.json()["models"]]
         except requests.RequestException as e:
             print(f"Warning: Failed to fetch Ollama models: {str(e)}")
             return []
 
     def _generate_response(self, prompt: str) -> str:
         url = f"{self.base_url}/api/generate"
-        data = {
-            "model": self.model,
-            "prompt": prompt,
-            "stream": False
-        }
+        data = {"model": self.model, "prompt": prompt, "stream": False}
 
         try:
             response = requests.post(url, json=data, timeout=30)
@@ -42,7 +41,8 @@ class OllamaPlugin(BasePlugin):
     def generate_commit_message(self, diff_summary: str) -> str:
         if self.model not in self.supported_models():
             raise ValueError(
-                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models())}")
+                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models())}"
+            )
 
         prompt = f"""As an AI assistant specialized in generating git commit messages, create a concise and informative commit message based on the following git diff summary:
 
@@ -62,7 +62,8 @@ Generate the commit message:"""
     def refine_commit_message(self, message: str, diff_summary: str) -> str:
         if self.model not in self.supported_models():
             raise ValueError(
-                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models())}")
+                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models())}"
+            )
 
         prompt = f"""As an AI assistant specialized in refining git commit messages, refine the following commit message based on the git diff summary:
 
@@ -81,10 +82,13 @@ Generate the refined commit message:"""
 
         return self._generate_response(prompt)
 
-    def generate_pull_request_message(self, diff_summary: str, commit_messages: List[str]) -> str:
+    def generate_pull_request_message(
+        self, diff_summary: str, commit_messages: List[str]
+    ) -> str:
         if self.model not in self.supported_models():
             raise ValueError(
-                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models())}")
+                f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models())}"
+            )
 
         formatted_commit_messages = "\n".join(commit_messages)
 

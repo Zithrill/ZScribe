@@ -2,7 +2,13 @@
 
 import json
 import boto3
-from botocore.exceptions import BotoCoreError, ClientError, NoRegionError, NoCredentialsError, NoAuthTokenError
+from botocore.exceptions import (
+    BotoCoreError,
+    ClientError,
+    NoRegionError,
+    NoCredentialsError,
+    NoAuthTokenError,
+)
 from typing import List
 from .base import BasePlugin
 
@@ -17,7 +23,7 @@ class BedrockPlugin(BasePlugin):
     def client(self):
         if self._client is None:
             try:
-                self._client = boto3.client('bedrock-runtime')
+                self._client = boto3.client("bedrock-runtime")
             except (NoRegionError, NoCredentialsError, NoAuthTokenError) as e:
                 print("Please review README for setting up AWS Bedrock runtime")
                 raise e
@@ -31,32 +37,36 @@ class BedrockPlugin(BasePlugin):
     @classmethod
     def list_models(cls) -> List[str]:
         try:
-            bedrock = boto3.client('bedrock')
+            bedrock = boto3.client("bedrock")
             response = bedrock.list_foundation_models()
-            models = [model['modelId'] for model in response['modelSummaries']]
+            models = [model["modelId"] for model in response["modelSummaries"]]
             return models
         except BotoCoreError:
             return []
 
     def _invoke_model(self, prompt: str) -> str:
         if self.model not in self.supported_models():
-            raise ValueError(f"Unsupported Bedrock model: {self.model}. Supported models are: {', '.join(self.supported_models())}")
+            raise ValueError(
+                f"Unsupported Bedrock model: {self.model}. Supported models are: {', '.join(self.supported_models())}"
+            )
 
         try:
-            body = json.dumps({
-                "prompt": prompt,
-                "max_tokens_to_sample": 500,
-                "temperature": 0.7,
-                "top_p": 1,
-            })
+            body = json.dumps(
+                {
+                    "prompt": prompt,
+                    "max_tokens_to_sample": 500,
+                    "temperature": 0.7,
+                    "top_p": 1,
+                }
+            )
             response = self.client.invoke_model(
                 body=body,
                 modelId=self.model,
-                accept='application/json',
-                contentType='application/json'
+                accept="application/json",
+                contentType="application/json",
             )
-            response_body = json.loads(response.get('body').read())
-            return response_body.get('completion', '').strip()
+            response_body = json.loads(response.get("body").read())
+            return response_body.get("completion", "").strip()
         except ClientError as e:
             raise RuntimeError(f"Bedrock API error: {str(e)}")
 
@@ -94,7 +104,9 @@ Generate the refined commit message:"""
 
         return self._invoke_model(prompt)
 
-    def generate_pull_request_message(self, diff_summary: str, commit_messages: List[str]) -> str:
+    def generate_pull_request_message(
+        self, diff_summary: str, commit_messages: List[str]
+    ) -> str:
         formatted_commit_messages = "\n".join(commit_messages)
 
         prompt = f"""As an AI assistant specialized in generating pull request descriptions, create a comprehensive and informative pull request description based on the following information:

@@ -12,17 +12,26 @@ def get_pull_request_info(pr_number: str) -> Tuple[str, str, List[str]]:
     :return: A tuple containing (base_branch, head_branch, commit_messages)
     """
     # Get the base and head branches
-    base_branch = subprocess.check_output(
-        ['git', 'config', f'pullrequest.{pr_number}.base']
-    ).decode().strip()
-    head_branch = subprocess.check_output(
-        ['git', 'config', f'pullrequest.{pr_number}.head']
-    ).decode().strip()
+    base_branch = (
+        subprocess.check_output(["git", "config", f"pullrequest.{pr_number}.base"])
+        .decode()
+        .strip()
+    )
+    head_branch = (
+        subprocess.check_output(["git", "config", f"pullrequest.{pr_number}.head"])
+        .decode()
+        .strip()
+    )
 
     # Get the list of commits in the pull request
-    commit_list = subprocess.check_output(
-        ['git', 'log', f'{base_branch}..{head_branch}', '--pretty=format:%s']
-    ).decode().strip().split('\n')
+    commit_list = (
+        subprocess.check_output(
+            ["git", "log", f"{base_branch}..{head_branch}", "--pretty=format:%s"]
+        )
+        .decode()
+        .strip()
+        .split("\n")
+    )
 
     return base_branch, head_branch, commit_list
 
@@ -36,7 +45,7 @@ def get_pull_request_diff(base_branch: str, head_branch: str) -> str:
     :return: The diff between the two branches
     """
     diff = subprocess.check_output(
-        ['git', 'diff', f'{base_branch}...{head_branch}']
+        ["git", "diff", f"{base_branch}...{head_branch}"]
     ).decode()
 
     return diff

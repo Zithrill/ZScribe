@@ -9,7 +9,7 @@ def get_git_diff(commit1, commit2):
             ["git", "diff", commit1, commit2],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         return result.stdout
     except subprocess.CalledProcessError as e:
@@ -23,7 +23,7 @@ def determine_context_lines(hunk_lines: List[str]) -> int:
     Smaller changes get more context, larger changes get less.
     """
     total_lines = len(hunk_lines)
-    changed_lines = sum(1 for line in hunk_lines if line.startswith(('+', '-')))
+    changed_lines = sum(1 for line in hunk_lines if line.startswith(("+", "-")))
     unchanged_lines = total_lines - changed_lines
 
     if changed_lines <= 3:
@@ -42,11 +42,11 @@ def parse_git_diff(diff: str) -> str:
     hunk_changes = []
     additions = 0
     deletions = 0
-    file_pattern = re.compile(r'^(\+\+\+|\-\-\-) [ab]/(.+)$')
-    hunk_pattern = re.compile(r'^@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@')
+    file_pattern = re.compile(r"^(\+\+\+|\-\-\-) [ab]/(.+)$")
+    hunk_pattern = re.compile(r"^@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@")
 
-    for line in diff.split('\n'):
-        if line.startswith('+++'):
+    for line in diff.split("\n"):
+        if line.startswith("+++"):
             match = file_pattern.match(line)
             if match:
                 current_file = match.group(2)
@@ -57,9 +57,9 @@ def parse_git_diff(diff: str) -> str:
             hunk_changes = [line]
         else:
             hunk_changes.append(line)
-            if line.startswith('+') and not line.startswith('+++'):
+            if line.startswith("+") and not line.startswith("+++"):
                 additions += 1
-            elif line.startswith('-') and not line.startswith('---'):
+            elif line.startswith("-") and not line.startswith("---"):
                 deletions += 1
 
     if hunk_changes:
@@ -80,21 +80,21 @@ def parse_git_diff(diff: str) -> str:
             context = []
 
             for line in hunk[1:]:  # Skip the hunk header
-                if line.startswith(('+', '-')):
+                if line.startswith(("+", "-")):
                     if context:
-                        changes.append(('context', context))
+                        changes.append(("context", context))
                         context = []
-                    changes.append(('change', line))
+                    changes.append(("change", line))
                 else:
                     context.append(line)
                     if len(context) > context_lines * 2:
                         context.pop(0)
 
             if context:
-                changes.append(('context', context))
+                changes.append(("context", context))
 
             for change_type, lines in changes:
-                if change_type == 'context':
+                if change_type == "context":
                     summary += "  Context:\n"
                     for line in lines[:context_lines]:
                         summary += f"    {line}\n"

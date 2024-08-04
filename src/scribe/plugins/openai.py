@@ -4,6 +4,7 @@ import os
 from typing import List
 import openai
 
+
 class OpenAIPlugin:
     def __init__(self, model: str):
         self.provider = "Openapi"
@@ -44,8 +45,11 @@ Please follow these guidelines:
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that generates git commit messages."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that generates git commit messages.",
+                },
+                {"role": "user", "content": prompt},
             ],
             max_tokens=500,
             n=1,
@@ -72,8 +76,11 @@ Please refine the commit message to ensure it:
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that refines git commit messages."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that refines git commit messages.",
+                },
+                {"role": "user", "content": prompt},
             ],
             max_tokens=500,
             n=1,
@@ -82,7 +89,9 @@ Please refine the commit message to ensure it:
 
         return response.choices[0].message.content.strip()
 
-    def generate_pull_request_message(self, diff_summary: str, commit_messages: List[str]) -> str:
+    def generate_pull_request_message(
+        self, diff_summary: str, commit_messages: List[str]
+    ) -> str:
         formatted_commit_messages = "\n".join(commit_messages)
 
         prompt = f"""As an AI assistant specialized in generating pull request descriptions, your task is to create a comprehensive and informative message based on the following information:
@@ -107,8 +116,11 @@ Please follow these guidelines:
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that generates pull request descriptions."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that generates pull request descriptions.",
+                },
+                {"role": "user", "content": prompt},
             ],
             max_tokens=1000,
             n=1,

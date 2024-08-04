@@ -3,6 +3,7 @@ from typing import List
 from anthropic import Anthropic, AnthropicError, HUMAN_PROMPT, AI_PROMPT
 from .base import BasePlugin
 
+
 class AnthropicPlugin(BasePlugin):
     def __init__(self, model: str):
         self.provider = "Anthropic"
@@ -43,9 +44,7 @@ class AnthropicPlugin(BasePlugin):
                 model=self.model,
                 max_tokens=500,
                 temperature=0.7,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ]
+                messages=[{"role": "user", "content": prompt}],
             )
             return response.content[0].text.strip()
         except AnthropicError as e:
@@ -88,7 +87,9 @@ Generate the refined commit message:"""
 
         return self._generate_response(prompt)
 
-    def generate_pull_request_message(self, diff_summary: str, commit_messages: List[str]) -> str:
+    def generate_pull_request_message(
+        self, diff_summary: str, commit_messages: List[str]
+    ) -> str:
         formatted_commit_messages = "\n".join(commit_messages)
 
         prompt = f"""As an AI assistant specialized in generating pull request descriptions, create a comprehensive and informative pull request description based on the following information:

@@ -14,22 +14,22 @@ from scribe.cli.hooks.run import run
 
 def setup_model_config(ctx, model, hook_type=None):
     if model:
-        os.environ['ZSCRIBE_MODEL'] = model
+        os.environ["ZSCRIBE_MODEL"] = model
     else:
         git_config_model = get_git_config_model(hook_type)
         if git_config_model:
-            os.environ['ZSCRIBE_MODEL'] = git_config_model
+            os.environ["ZSCRIBE_MODEL"] = git_config_model
 
     try:
-        ctx.obj['config'] = get_model_config()
-        ctx.obj['plugin'] = get_plugin(ctx.obj['config'])
+        ctx.obj["config"] = get_model_config()
+        ctx.obj["plugin"] = get_plugin(ctx.obj["config"])
     except ValueError as e:
         click.echo(f"Error: {str(e)}", err=True)
         ctx.abort()
 
 
 @click.group()
-@click.option('--model', help='Specify the AI model to use')
+@click.option("--model", help="Specify the AI model to use")
 @click.pass_context
 def cli(ctx, model):
     """ZScribe CLI for generating commit messages and PR descriptions."""
@@ -38,33 +38,33 @@ def cli(ctx, model):
 
 
 @cli.command()
-@click.argument('commit1')
-@click.argument('commit2')
-@click.option('--refine', is_flag=True, help='Refine the generated commit message')
+@click.argument("commit1")
+@click.argument("commit2")
+@click.option("--refine", is_flag=True, help="Refine the generated commit message")
 @click.pass_context
 def commit_command(ctx, commit1, commit2, refine):
     """Generate a commit message."""
-    git_config_model = get_git_config_model('commit')
+    git_config_model = get_git_config_model("commit")
     if git_config_model:
-        os.environ['ZSCRIBE_MODEL'] = git_config_model
-    setup_model_config(ctx, None, 'commit')
+        os.environ["ZSCRIBE_MODEL"] = git_config_model
+    setup_model_config(ctx, None, "commit")
     ctx.invoke(commit, commit1=commit1, commit2=commit2, refine=refine)
 
 
 @cli.command()
-@click.argument('pr_number')
+@click.argument("pr_number")
 @click.pass_context
 def pr_command(ctx, pr_number):
     """Generate a pull request description."""
-    git_config_model = get_git_config_model('pr')
+    git_config_model = get_git_config_model("pr")
     if git_config_model:
-        os.environ['ZSCRIBE_MODEL'] = git_config_model
-    setup_model_config(ctx, None, 'pr')
+        os.environ["ZSCRIBE_MODEL"] = git_config_model
+    setup_model_config(ctx, None, "pr")
     ctx.invoke(pr, pr_number=pr_number)
 
 
-cli.add_command(commit_command, name='commit')
-cli.add_command(pr_command, name='pr')
+cli.add_command(commit_command, name="commit")
+cli.add_command(pr_command, name="pr")
 cli.add_command(models)
 
 
@@ -79,5 +79,5 @@ hooks.add_command(remove)
 hooks.add_command(update)
 hooks.add_command(run)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli(obj={})
