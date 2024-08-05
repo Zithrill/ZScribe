@@ -75,6 +75,9 @@ def parse_git_diff(diff: str) -> str:
         summary += "=" * (len(file) + 6) + "\n\n"
 
         for hunk in hunks:
+            if len(hunk) < 2:
+                continue
+
             context_lines = determine_context_lines(hunk)
             context: List[str] = []
             changes: List[Tuple[str, List[str]]] = []
