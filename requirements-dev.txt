@@ -5,3 +5,4 @@ bandit
 types-requests
 pytest
 pytest-mock
+types-requests
