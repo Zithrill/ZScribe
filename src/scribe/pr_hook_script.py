@@ -4,10 +4,13 @@ from scribe.pull_request_utils import get_pull_request_info, get_pull_request_di
 from scribe.config import get_model_config
 from scribe.plugins import get_plugin
 
+
 def generate_pr_description(pr_number):
     try:
         base_branch, head_branch, commit_messages = get_pull_request_info(pr_number)
         diff = get_pull_request_diff(base_branch, head_branch)
+
+        # Use the new parse_git_diff function
         diff_summary = parse_git_diff(diff)
 
         # Get the model configuration
@@ -25,6 +28,7 @@ def generate_pr_description(pr_number):
     except Exception as e:
         print(f"Error generating pull request description: {e}")
         print("Please write your pull request description manually.")
+
 
 if __name__ == "__main__":
     generate_pr_description(sys.argv[1])

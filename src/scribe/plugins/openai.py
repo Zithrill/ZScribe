@@ -4,6 +4,7 @@ import os
 from typing import List
 import openai
 
+
 class OpenAIPlugin:
     def __init__(self, model: str):
         self.provider = "Openapi"
@@ -44,15 +45,18 @@ Please follow these guidelines:
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that generates git commit messages."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that generates git commit messages.",
+                },
+                {"role": "user", "content": prompt},
             ],
             max_tokens=500,
             n=1,
             temperature=0.7,
         )
 
-        return response.choices[0].message.content.strip()
+        return str(response.choices[0].message.content.strip())
 
     def refine_commit_message(self, message: str, diff_summary: str) -> str:
         prompt = f"""You are an AI assistant specialized in refining git commit messages. You've been given the following commit message:
@@ -72,15 +76,18 @@ Please refine the commit message to ensure it:
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that refines git commit messages."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that refines git commit messages.",
+                },
+                {"role": "user", "content": prompt},
             ],
             max_tokens=500,
             n=1,
             temperature=0.5,
         )
 
-        return response.choices[0].message.content.strip()
+        return str(response.choices[0].message.content.strip())
 
     def generate_pull_request_message(self, diff_summary: str, commit_messages: List[str]) -> str:
         formatted_commit_messages = "\n".join(commit_messages)
@@ -107,12 +114,15 @@ Please follow these guidelines:
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that generates pull request descriptions."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant that generates pull request descriptions.",
+                },
+                {"role": "user", "content": prompt},
             ],
             max_tokens=1000,
             n=1,
             temperature=0.7,
         )
 
-        return response.choices[0].message.content.strip()
+        return str(response.choices[0].message.content.strip())

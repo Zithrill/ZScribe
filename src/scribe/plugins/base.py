@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 
 class BasePlugin(ABC):
@@ -12,5 +13,5 @@ class BasePlugin(ABC):
         pass
 
     @abstractmethod
-    def generate_pull_request_message(self, diff_summary: str, commit_messages: list[str]) -> str:
+    def generate_pull_request_message(self, diff_summary: str, commit_messages: List[str]) -> str:
         pass
