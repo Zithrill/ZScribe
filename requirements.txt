@@ -3,3 +3,4 @@ boto3
 click
 openai
 requests
+urllib3==1.26.15
