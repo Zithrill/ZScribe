@@ -8,11 +8,7 @@ from scribe.plugins import get_plugin
 
 def get_git_config_model():
     try:
-        return (
-            subprocess.check_output(["git", "config", "zscribe.model"])
-            .decode("utf-8")
-            .strip()
-        )
+        return subprocess.check_output(["git", "config", "zscribe.model"]).decode("utf-8").strip()
     except subprocess.CalledProcessError:
         return None
 

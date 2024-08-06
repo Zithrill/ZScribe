@@ -13,14 +13,10 @@ def get_pull_request_info(pr_number: str) -> Tuple[str, str, List[str]]:
     """
     # Get the base and head branches
     base_branch = (
-        subprocess.check_output(["git", "config", f"pullrequest.{pr_number}.base"])
-        .decode()
-        .strip()
+        subprocess.check_output(["git", "config", f"pullrequest.{pr_number}.base"]).decode().strip()
     )
     head_branch = (
-        subprocess.check_output(["git", "config", f"pullrequest.{pr_number}.head"])
-        .decode()
-        .strip()
+        subprocess.check_output(["git", "config", f"pullrequest.{pr_number}.head"]).decode().strip()
     )
 
     # Get the list of commits in the pull request
@@ -44,8 +40,6 @@ def get_pull_request_diff(base_branch: str, head_branch: str) -> str:
     :param head_branch: The head branch of the pull request
     :return: The diff between the two branches
     """
-    diff = subprocess.check_output(
-        ["git", "diff", f"{base_branch}...{head_branch}"]
-    ).decode()
+    diff = subprocess.check_output(["git", "diff", f"{base_branch}...{head_branch}"]).decode()
 
     return diff

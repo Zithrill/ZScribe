@@ -10,9 +10,7 @@ def get_model_config() -> Dict[str, Any]:
 
     if model not in model_provider_map:
         available_models = ", ".join(model_provider_map.keys())
-        raise ValueError(
-            f"Unsupported model: {model}. Available models are: {available_models}"
-        )
+        raise ValueError(f"Unsupported model: {model}. Available models are: {available_models}")
 
     provider = model_provider_map[model]
 

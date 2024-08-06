@@ -104,9 +104,7 @@ Generate the refined commit message:"""
 
         return self._invoke_model(prompt)
 
-    def generate_pull_request_message(
-        self, diff_summary: str, commit_messages: List[str]
-    ) -> str:
+    def generate_pull_request_message(self, diff_summary: str, commit_messages: List[str]) -> str:
         formatted_commit_messages = "\n".join(commit_messages)
 
         prompt = f"""As an AI assistant specialized in generating pull request descriptions, create a comprehensive and informative pull request description based on the following information:

@@ -19,9 +19,7 @@ def get_git_config_model(hook_type=None):
             )
         else:
             return (
-                subprocess.check_output(["git", "config", "zscribe.model"])
-                .decode("utf-8")
-                .strip()
+                subprocess.check_output(["git", "config", "zscribe.model"]).decode("utf-8").strip()
             )
     except subprocess.CalledProcessError:
         return None
@@ -29,11 +27,7 @@ def get_git_config_model(hook_type=None):
 
 def get_git_hooks_dir():
     try:
-        git_dir = (
-            subprocess.check_output(["git", "rev-parse", "--git-dir"])
-            .decode("utf-8")
-            .strip()
-        )
+        git_dir = subprocess.check_output(["git", "rev-parse", "--git-dir"]).decode("utf-8").strip()
         return os.path.join(git_dir, "hooks")
     except subprocess.CalledProcessError:
         raise ValueError(

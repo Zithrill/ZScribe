@@ -19,9 +19,7 @@ def commit(ctx, commit1, commit2, refine):
     try:
         commit_message = ctx.obj["plugin"].generate_commit_message(diff_summary)
         if refine:
-            commit_message = ctx.obj["plugin"].refine_commit_message(
-                commit_message, diff_summary
-            )
+            commit_message = ctx.obj["plugin"].refine_commit_message(commit_message, diff_summary)
         click.echo(f"Generated Commit Message (using {ctx.obj['config']['model']}):")
         click.echo(commit_message)
     except Exception as e:

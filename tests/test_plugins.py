@@ -36,9 +36,7 @@ def test_list_available_models(mocker):
         "scribe.plugins.bedrock.BedrockPlugin.list_models",
         return_value=["anthropic.claude-v2"],
     )
-    mocker.patch(
-        "scribe.plugins.ollama.OllamaPlugin.list_models", return_value=["llama2"]
-    )
+    mocker.patch("scribe.plugins.ollama.OllamaPlugin.list_models", return_value=["llama2"])
 
     models = list_available_models()
     assert isinstance(models, dict)

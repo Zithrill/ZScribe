@@ -22,9 +22,7 @@ def test_get_pull_request_info(mock_check_output):
     assert mock_check_output.call_count == 3
     mock_check_output.assert_any_call(["git", "config", "pullrequest.123.base"])
     mock_check_output.assert_any_call(["git", "config", "pullrequest.123.head"])
-    mock_check_output.assert_any_call(
-        ["git", "log", "main..feature-branch", "--pretty=format:%s"]
-    )
+    mock_check_output.assert_any_call(["git", "log", "main..feature-branch", "--pretty=format:%s"])
 
 
 @patch("subprocess.check_output")

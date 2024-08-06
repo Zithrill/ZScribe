@@ -89,9 +89,7 @@ Please refine the commit message to ensure it:
 
         return str(response.choices[0].message.content.strip())
 
-    def generate_pull_request_message(
-        self, diff_summary: str, commit_messages: List[str]
-    ) -> str:
+    def generate_pull_request_message(self, diff_summary: str, commit_messages: List[str]) -> str:
         formatted_commit_messages = "\n".join(commit_messages)
 
         prompt = f"""As an AI assistant specialized in generating pull request descriptions, your task is to create a comprehensive and informative message based on the following information:

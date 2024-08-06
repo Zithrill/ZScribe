@@ -82,9 +82,7 @@ Generate the refined commit message:"""
 
         return self._generate_response(prompt)
 
-    def generate_pull_request_message(
-        self, diff_summary: str, commit_messages: List[str]
-    ) -> str:
+    def generate_pull_request_message(self, diff_summary: str, commit_messages: List[str]) -> str:
         if self.model not in self.supported_models():
             raise ValueError(
                 f"Unsupported Ollama model: {self.model}. Supported models are: {', '.join(self.supported_models())}"
