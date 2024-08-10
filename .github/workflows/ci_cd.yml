@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0  # This is important for the version check
+        fetch-depth: 0  # This is important for the version check and auto-bumping
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -32,8 +32,6 @@ jobs:
       run: mypy .
     - name: Run bandit
       run: bandit -c bandit.yaml -r .
-    - name: Check version bump
-      run: python scripts/version_check.py
 
   test:
     needs: quality
@@ -101,3 +99,9 @@ jobs:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: twine upload dist/*
+    - name: Create GitHub Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        version=$(python setup.py --version)
+        gh release create v$version --generate-notes
